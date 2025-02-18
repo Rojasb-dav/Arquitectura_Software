@@ -1,0 +1,122 @@
+1. DIAGRAMA DE CASOS DE USO
+graph TD
+    A[Gestión de Pagos y Cuentas] -->|Registra cuentas por cobrar| B[Administrador]
+    A -->|Registra cuentas por pagar| C[Contador]
+    A -->|Controla pagos a proveedores| D[Sistema]
+    A -->|Conciliación de caja y cuentas bancarias| E[Contador]
+    A -->|Genera reportes financieros| F[Sistema]
+classDiagram
+    class Cliente {
+        +string nombre
+        +string email
+        +list<CuentaCobrar> cuentas
+    }
+    class CuentaCobrar {
+        +string id
+        +float monto
+        +string fechaVencimiento
+        +boolean estado
+    }
+    class Proveedor {
+        +string nombre
+        +list<CuentaPagar> cuentas
+    }
+    class CuentaPagar {
+        +string id
+        +float monto
+        +string fechaVencimiento
+        +boolean estado
+    }
+    class Pago {
+        +string id
+        +float monto
+        +string metodo
+    }
+    Cliente --> CuentaCobrar
+    Proveedor --> CuentaPagar
+    CuentaCobrar --> Pago
+    CuentaPagar --> Pago
+
+
+2. DIAGRAMA DE CLASES
+classDiagram
+    class Cliente {
+        +string nombre
+        +string email
+        +list<CuentaCobrar> cuentas
+    }
+    class CuentaCobrar {
+        +string id
+        +float monto
+        +string fechaVencimiento
+        +boolean estado
+    }
+    class Proveedor {
+        +string nombre
+        +list<CuentaPagar> cuentas
+    }
+    class CuentaPagar {
+        +string id
+        +float monto
+        +string fechaVencimiento
+        +boolean estado
+    }
+    class Pago {
+        +string id
+        +float monto
+        +string metodo
+    }
+    Cliente --> CuentaCobrar
+    Proveedor --> CuentaPagar
+    CuentaCobrar --> Pago
+    CuentaPagar --> Pago
+
+
+3. DIAGRAMA DE SECUENCIA
+sequenceDiagram
+    actor Contador
+    participant Sistema
+    participant BD as Base de Datos
+    Contador->>Sistema: Registra cuenta por pagar
+    Sistema->>BD: Guarda datos de cuenta
+    BD-->>Sistema: Confirma registro
+    Sistema-->>Contador: Cuenta registrada
+    Contador->>Sistema: Procesar pago
+    Sistema->>BD: Actualiza estado de cuenta
+    BD-->>Sistema: Confirmación de pago
+    Sistema-->>Contador: Pago registrado
+
+
+4. DIAGRAMA DE FLUJO DE DATOS
+graph TD
+    A[Contador] -->|Registra cuentas por cobrar/pagar| B[Base de Datos]
+    B -->|Actualiza estado de cuenta| C[Control de Pagos]
+    C -->|Genera reporte financiero| D[Reportes]
+    C -->|Realiza conciliación bancaria| E[Conciliación]
+
+
+5. DIAGRAMA DE ESTADO
+stateDiagram
+    [*] --> CuentaPendiente
+    CuentaPendiente --> PagoProcesado : Pago recibido
+    CuentaPendiente --> Vencida : Fecha de vencimiento alcanzada
+    Vencida --> PagoProcesado : Pago tardío recibido
+    PagoProcesado --> Cerrada
+
+
+6. DIAGRAMA DE DESPLIEGUE
+graph TD
+    Contador -->|Accede vía web| Servidor
+    Servidor -->|Consulta| BaseDeDatos
+    Servidor -->|Conexión| Banco
+    Banco -->|Validación de pago| Servidor
+    Servidor -->|Actualiza cuenta| BaseDeDatos
+
+
+7. DIAGRAMA FUNCIONAL
+graph TD
+    A[Gestión de Pagos] -->|Registrar cuentas por cobrar| B[Base de Datos]
+    A -->|Registrar cuentas por pagar| C[Base de Datos]
+    A -->|Procesar pagos| D[Gestión Financiera]
+    A -->|Realizar conciliación| E[Sistema Bancario]
+    A -->|Generar reportes| F[Reportes]

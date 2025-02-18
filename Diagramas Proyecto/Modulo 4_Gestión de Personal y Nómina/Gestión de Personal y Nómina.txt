@@ -1,0 +1,81 @@
+1. DIAGRAMA DE CASOS DE USO
+graph TD
+    A[Gestión de Personal y Nómina] -->|Registrar empleados| B[Administrador]
+    A -->|Calcular nómina| C[Sistema]
+    A -->|Generar recibos de pago| D[Sistema]
+    A -->|Gestionar beneficios laborales| E[RRHH]
+    A -->|Calcular comisiones y deducciones| F[Sistema]
+
+
+2. DIAGRAMA DE CLASES
+classDiagram
+    class Empleado {
+        +string id
+        +string nombre
+        +float sueldoBase
+        +float comisiones
+        +float deducciones
+    }
+    class Nomina {
+        +string id
+        +list<Empleado> empleados
+        +float totalPago
+        +void calcularNomina()
+    }
+    class ReciboPago {
+        +string id
+        +Empleado empleado
+        +float monto
+        +string fechaPago
+    }
+    Empleado --> ReciboPago
+    Nomina --> Empleado
+
+
+3. DIAGRAMA DE SECUENCIA
+sequenceDiagram
+    actor Administrador
+    participant Sistema
+    participant BD as Base de Datos
+    Administrador->>Sistema: Registrar nuevo empleado
+    Sistema->>BD: Guarda datos del empleado
+    BD-->>Sistema: Confirma registro
+    Sistema-->>Administrador: Empleado registrado
+    Administrador->>Sistema: Calcular nómina
+    Sistema->>BD: Obtiene datos de empleados
+    BD-->>Sistema: Retorna datos
+    Sistema-->>Administrador: Nómina calculada
+
+
+4. DIAGRAMA DE FLUJO DE DATOS
+graph TD
+    A[Administrador] -->|Registra empleados| B[Base de Datos]
+    B -->|Genera datos para nómina| C[Cálculo de Nómina]
+    C -->|Calcula sueldos, comisiones y deducciones| D[Sistema de Pago]
+    D -->|Genera recibos de pago| E[Recibos]
+
+
+5. DIAGRAMA DE ESTADO
+stateDiagram
+    [*] --> EmpleadoRegistrado
+    EmpleadoRegistrado --> EnNomina : Se incluye en nómina
+    EnNomina --> PagoPendiente : Llega fecha de pago
+    PagoPendiente --> PagoRealizado : Pago procesado
+    PagoRealizado --> EnNomina
+
+
+6. DIAGRAMA DE DESPLIEGUE
+graph TD
+    RRHH -->|Accede vía web| Servidor
+    Servidor -->|Consulta| BaseDeDatos
+    Servidor -->|Procesa nómina| SistemaNomina
+    SistemaNomina -->|Envía pagos| Banco
+
+
+7. DIAGRAMA FUNCIONAL
+graph TD
+    A[Gestión de Nómina] -->|Registrar empleados| B[Base de Datos]
+    A -->|Calcular sueldos| C[Cálculo de Nómina]
+    A -->|Aplicar deducciones y beneficios| D[Gestión de Beneficios]
+    A -->|Generar recibos de pago| E[Sistema de Recibos]
+    A -->|Ejecutar pagos| F[Sistema Bancario]

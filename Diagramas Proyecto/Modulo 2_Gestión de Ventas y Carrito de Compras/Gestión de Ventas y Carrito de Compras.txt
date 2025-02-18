@@ -1,0 +1,95 @@
+1. DIAGRAMA DE CASOS DE USO
+graph TD
+    A[Gestión de Ventas] -->|Crea orden de compra| B[Cliente]
+    A -->|Selecciona productos, tallas y colores| C[Cliente]
+    A -->|Procesa pago| D[Sistema]
+    A -->|Genera factura electrónica| E[Sistema]
+    A -->|Calcula impuestos| F[Sistema]
+    A -->|Modifica carrito de compras| G[Cliente]
+
+
+2. DIAGRAMA DE CLASES
+classDiagram
+    class Cliente {
+        +string nombre
+        +string email
+        +string telefono
+        +list<OrdenCompra> ordenes
+    }
+    class OrdenCompra {
+        +string id
+        +list<ItemCarrito> productos
+        +float total
+        +Pago metodoPago
+    }
+    class ItemCarrito {
+        +Producto producto
+        +int cantidad
+        +float subtotal
+    }
+    class Pago {
+        +string tipo
+        +boolean estado
+    }
+    class Producto {
+        +string nombre
+        +float precio
+    }
+    Cliente --> OrdenCompra
+    OrdenCompra --> ItemCarrito
+    ItemCarrito --> Producto
+    OrdenCompra --> Pago
+
+
+3. DIAGRAMA DE SECUENCIA
+sequenceDiagram
+    actor Cliente
+    participant Sistema
+    participant BD as Base de Datos
+    Cliente->>Sistema: Agregar producto al carrito
+    Sistema->>BD: Consulta stock disponible
+    BD-->>Sistema: Devuelve disponibilidad
+    Sistema-->>Cliente: Producto agregado al carrito
+    Cliente->>Sistema: Realizar compra
+    Sistema->>BD: Genera orden de compra
+    BD-->>Sistema: Confirma compra
+    Sistema-->>Cliente: Orden confirmada
+
+
+4. DIAGRAMA DE FLUJO DE DATOS
+graph TD
+    A[Cliente] -->|Agrega productos| B[Carrito de Compras]
+    B -->|Valida stock| C[Base de Datos]
+    B -->|Procesa pago| D[Pasarela de Pago]
+    D -->|Confirma pago| E[Sistema]
+    E -->|Genera factura| F[Facturación]
+
+
+5. DIAGRAMA DE ESTADO
+stateDiagram
+    [*] --> CarritoVacio
+    CarritoVacio --> CarritoConProductos : Cliente añade productos
+    CarritoConProductos --> OrdenCreada : Cliente confirma compra
+    OrdenCreada --> PagoPendiente : Selecciona método de pago
+    PagoPendiente --> PagoAprobado : Pago exitoso
+    PagoPendiente --> PagoRechazado : Pago fallido
+    PagoRechazado --> CarritoConProductos
+    PagoAprobado --> FacturaGenerada
+
+
+6. DIAGRAMA DE DESPLIEGUE
+graph TD
+    Cliente -->|Accede vía web o app| Servidor
+    Servidor -->|Consulta| BaseDeDatos
+    Servidor -->|Conexión| PasarelaDePago
+    PasarelaDePago -->|Respuesta de pago| Servidor
+    Servidor -->|Genera factura| SistemaFacturacion
+
+
+7. DIAGRAMA FUNCIONAL
+graph TD
+    A[Gestión de Ventas] -->|Añadir producto al carrito| B[Carrito de Compras]
+    A -->|Procesar compra| C[Base de Datos]
+    A -->|Aplicar descuentos y calcular impuestos| D[Sistema de Facturación]
+    A -->|Generar factura electrónica| E[Facturación]
+    A -->|Actualizar stock tras compra| F[Gestión de Inventario]

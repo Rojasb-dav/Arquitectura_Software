@@ -1,0 +1,83 @@
+1. DIAGRAMA DE CASOS DE USO
+graph TD
+    A[Gestión de Logística y Entregas] -->|Generar número de guía| B[Sistema]
+    A -->|Asociar venta con número de guía| C[Sistema]
+    A -->|Registrar estado de entrega| D[Transportista]
+    A -->|Actualizar estado de entrega| E[Sistema]
+    A -->|Controlar pagos a transportadoras| F[Administrador]
+
+
+2. DIAGRAMA DE CLASES
+classDiagram
+    class Pedido {
+        +string id
+        +string estado
+        +string numeroGuia
+        +Cliente cliente
+    }
+    class Cliente {
+        +string nombre
+        +string direccion
+        +list<Pedido> pedidos
+    }
+    class Transportista {
+        +string id
+        +string nombre
+        +list<Pedido> pedidos
+    }
+    class Entrega {
+        +string id
+        +Pedido pedido
+        +string estado
+        +string fecha
+    }
+    Pedido --> Cliente
+    Pedido --> Transportista
+    Pedido --> Entrega
+
+
+3. DIAGRAMA DE SECUENCIA
+sequenceDiagram
+    actor Cliente
+    participant Sistema
+    participant BD as Base de Datos
+    Cliente->>Sistema: Realiza compra
+    Sistema->>BD: Genera número de guía
+    BD-->>Sistema: Guarda información
+    Sistema-->>Cliente: Confirma pedido con número de guía
+    Transportista->>Sistema: Actualiza estado de entrega
+    Sistema->>BD: Registra actualización
+    BD-->>Sistema: Confirmación de actualización
+
+
+4. DIAGRAMA DE FLUJO DE DATOS
+graph TD
+    A[Sistema] -->|Genera número de guía| B[Base de Datos]
+    B -->|Asocia pedido con guía| C[Gestión de Pedidos]
+    C -->|Envía información a transportista| D[Transportista]
+    D -->|Actualiza estado de entrega| E[Seguimiento]
+
+
+5. DIAGRAMA DE ESTADO
+stateDiagram
+    [*] --> PedidoGenerado
+    PedidoGenerado --> EnTransito : Recogido por transportista
+    EnTransito --> Entregado : Cliente recibe pedido
+    EnTransito --> Devuelto : Problema en la entrega
+    Devuelto --> PedidoGenerado
+
+
+6. DIAGRAMA DE DESPLIEGUE
+graph TD
+    Cliente -->|Accede vía web| Servidor
+    Servidor -->|Consulta| BaseDeDatos
+    Servidor -->|Comunicación| Transportista
+    Transportista -->|Actualización de estado| Servidor
+
+
+7. DIAGRAMA FUNCIONAL
+graph TD
+    A[Gestión de Logística] -->|Generar número de guía| B[Base de Datos]
+    A -->|Asociar pedido con transportista| C[Gestión de Pedidos]
+    A -->|Actualizar estado de entrega| D[Seguimiento]
+    A -->|Generar reportes de entrega| E[Reportes]

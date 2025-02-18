@@ -1,0 +1,72 @@
+1. DIAGRAMA DE CASOS DE USO
+graph TD
+    A[Gestión de Inventario] -->|Registra productos| B[Administrador]
+    A -->|Controla entradas/salidas| C[Vendedor]
+    A -->|Genera alertas de stock bajo| D[Sistema]
+    A -->|Registra compras y actualiza inventario| E[Contador]
+    A -->|Aplica métodos de valoración| F[Sistema]
+
+2. DIAGRAMA DE CLASES
+classDiagram
+    class Producto {
+        +string codigo
+        +string descripcion
+        +string categoria
+        +string talla
+        +string color
+        +float precioCompra
+        +float precioVenta
+        +int cantidadStock
+        +Proveedor proveedor
+    }
+    class Proveedor {
+        +string nombre
+        +string contacto
+        +string direccion
+    }
+    class Inventario {
+        +list<Producto> productos
+        +void actualizarStock()
+        +void generarAlerta()
+    }
+    Inventario --> Producto
+    Producto --> Proveedor
+
+3. DIAGRAMA DE SECUENCIA
+sequenceDiagram
+    actor Admin
+    participant Sistema
+    participant BD as Base de Datos
+    Admin->>Sistema: Registra un nuevo producto
+    Sistema->>BD: Guarda datos del producto
+    BD-->>Sistema: Confirma registro
+    Sistema-->>Admin: Producto registrado exitosamente
+
+4. DIAGRAMA DE FLUJO DE DATOS
+graph TD
+    A[Usuario] -->|Ingresa datos del producto| B[Sistema de Inventario]
+    B -->|Guarda datos| C[Base de Datos]
+    B -->|Verifica stock| D[Control de Stock]
+    D -->|Genera alerta si es necesario| E[Notificaciones]
+
+5. DIAGRAMA DE ESTADO
+stateDiagram
+    [*] --> ProductoNuevo
+    ProductoNuevo --> EnStock : Se registra
+    EnStock --> BajoStock : Cantidad < Umbral
+    BajoStock --> Reabastecido : Compra realizada
+    Reabastecido --> EnStock
+
+6. DIAGRAMA DE DESPLIEGUE
+graph TD
+    Cliente -->|Accede vía Web| Servidor
+    Servidor -->|Consulta| BaseDeDatos
+    BaseDeDatos -->|Devuelve información| Servidor
+    Servidor -->|Muestra en interfaz| Cliente
+
+7. DIAGRAMA FUNCIONAL
+graph TD
+    A[Gestión de Inventario] -->|Registra productos| B[Base de Datos]
+    A -->|Genera alertas de stock| C[Panel de Control]
+    A -->|Calcula métodos de valoración| D[Algoritmos de Costeo]
+    A -->|Actualiza inventario tras ventas| E[Gestión de Ventas]
